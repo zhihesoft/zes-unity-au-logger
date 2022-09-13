@@ -11,29 +11,34 @@ namespace Au
     public class Logger
     {
         private static Dictionary<string, Logger> loggers = new Dictionary<string, Logger>();
-        private static ILoggerHandler[] handlers;
+        private static List<ILoggerHandler> handlers = new List<ILoggerHandler>();
 
-        public static void Start(params ILoggerHandler[] handlers)
+        private static void AddHandler(ILoggerHandler handler)
         {
-            Assert.IsNull(Logger.handlers, "already started");
-            Logger.handlers = handlers;
-            Application.logMessageReceivedThreaded += Application_logMessageReceivedThreaded;
-            foreach (var handler in handlers)
+            if (handlers.Count <= 0)
             {
-                handler.Start();
+                Application.logMessageReceivedThreaded += Application_logMessageReceivedThreaded;
             }
+            handler.Start();
+            handlers.Add(handler);
+        }
+
+        public static void AddFile(string name, int maxSize, int maxCount)
+        {
+            var handler = new FileLogger(name, maxSize, maxCount);
+            AddHandler(handler);
         }
 
         public static void Stop()
         {
-            Application.logMessageReceivedThreaded -= Application_logMessageReceivedThreaded;
-            if (handlers != null)
+            if (handlers.Count > 0)
             {
+                Application.logMessageReceivedThreaded -= Application_logMessageReceivedThreaded;
                 foreach (var handler in handlers)
                 {
                     handler.Stop();
                 }
-                handlers = null;
+                handlers.Clear();
             }
         }
 

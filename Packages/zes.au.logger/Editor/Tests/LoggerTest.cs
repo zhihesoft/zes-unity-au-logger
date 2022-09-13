@@ -37,12 +37,17 @@ public class LoggerTest : IPrebuildSetup, IPostBuildCleanup
 
     public void Setup()
     {
-        var files = Directory.GetFiles(Path.Combine(Application.persistentDataPath, "logs"));
+        var dir = Path.Combine(Application.persistentDataPath, "logs");
+        if (!Directory.Exists(dir))
+        {
+            Directory.CreateDirectory(dir);
+        }
+        var files = Directory.GetFiles(dir);
         foreach (var item in files)
         {
             File.Delete(item);
         }
-        Au.Logger.Start(new FileLogger("test.log", 1024, 3));
+        Au.Logger.AddFile("test.log", 1024, 3);
     }
 
     public void Cleanup()

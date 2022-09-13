@@ -22,7 +22,7 @@ namespace Au.Logs
 
         public void Log(LogType type, string message)
         {
-            writer.WriteLine($"[{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}] [{type}] {message}");
+            writer.WriteLine($"[{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}] [{ShortLogTypeName.GetName(type)}] {message}");
             if (writer.BaseStream.Length > maxSize)
             {
                 Loop();
