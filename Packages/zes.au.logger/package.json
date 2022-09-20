@@ -1,7 +1,7 @@
 {
   "name": "zes.au.logger",
   "displayName": "Au Logger",
-  "version": "0.1.5",
+  "version": "0.2.0",
   "description": "Au Logger library for Unity3D",
   "keywords": [
     "Script"
